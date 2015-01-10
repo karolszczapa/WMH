@@ -1,38 +1,49 @@
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 
 public class GeneticAlgorithm {
 	private double mutationPropability_;
 	private double elitismPercentage_;
-	
+    private BufferedWriter output_;
+
 	private Graph graph_;
 	private Population population_;
 	private Random random_;
 
-	public GeneticAlgorithm(int populationSize, int graphSize, double mutationPropability, double elitismPercentage){
+	public GeneticAlgorithm(int populationSize, int graphSize, double mutationPropability, double elitismPercentage, BufferedWriter output){
 		graph_ = new Graph(graphSize);
 		population_ = new Population(populationSize, graph_);
 		random_ = new Random();
 		
 		mutationPropability_ = mutationPropability;
 		elitismPercentage_ = elitismPercentage;
+        output_ = output;
 	}
 	
-	public Population invoke(int iterationCount){
+	public Population invoke(int iterationCount) throws IOException {
 		randomize();
 		long start = System.currentTimeMillis();   
 		int bestPathCost = 0;//graph_.findBestPathCost();
 		long newStart = System.currentTimeMillis();
 		long elapsedTime = newStart - start;
 		start = newStart;
-		System.out.println("Best path cost: "+ bestPathCost+ " " +" elapsed: " +elapsedTime);
+        output_.write("Iteration,Best Cost,Average Cost,Elapsed Time\n");
 		sort();
 		for(int i = 0; i<iterationCount; ++i){
 			if(i%1000 == 0){
 				newStart = System.currentTimeMillis();
 				elapsedTime = newStart - start;
 				start = newStart;
-				System.out.println("" + i + ". Best: "+population_.get(0).countCost()+" Average: "+population_.averageCost()+" elapsed: "+elapsedTime);
+                output_.write("" + i + "," + population_.get(0).countCost() + "," + population_.averageCost() + "," + elapsedTime+"\n");
 			}
 			Population newPop = createNewPopulation();
 			int remainSpace = newPop.getRemainSize();
@@ -93,7 +104,23 @@ public class GeneticAlgorithm {
 	}
 	
 	public static void main(String[] args) {
-		GeneticAlgorithm ga = new GeneticAlgorithm(1000, 40, 0.05, 0.10);
-		Population p = ga.invoke(10001);
+        try {
+            BufferedWriter output = fileOutput();
+            GeneticAlgorithm ga = new GeneticAlgorithm(1000, 40, 0.05, 0.10, output);
+            Population p = ga.invoke(10001);
+            output.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 	}
+
+    private static BufferedWriter fileOutput() throws IOException {
+        String fileName = new SimpleDateFormat("'TSP_GA_'yyyyMMddHHmmss'.csv'").format(new Date());
+        java.nio.file.Path path = FileSystems.getDefault().getPath(".", fileName);
+        return Files.newBufferedWriter(path, Charset.forName("UTF-8"), StandardOpenOption.CREATE_NEW);
+    }
+
+    private static BufferedWriter stdOutput() {
+        return new BufferedWriter(new OutputStreamWriter(System.out));
+    }
 }
