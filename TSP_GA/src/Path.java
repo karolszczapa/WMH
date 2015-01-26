@@ -14,7 +14,11 @@ public class Path {
 	private final int NOT_COUNTED = -1;
 	private final int VISITED = -1;
 	
-	Path(Graph graph){
+	/**
+	 * Constructor which initializes every data
+	 * @param graph Graph in which path is localized
+	 */
+	public Path(Graph graph){
 		edges_ = new ArrayList<Integer>(graph.getSize());
 		unvisited_ = new ArrayList<Integer>(graph.getSize());
 		unvisitedIndexes_ = new ArrayList<Integer>(graph.getSize());
@@ -28,13 +32,22 @@ public class Path {
 			unvisitedIndexes_.add(i);
 		}
 	}
-	
+	/**
+	 * crossover two paths to create new one
+	 * On begin, there is chosen one edge randomly. 
+	 * Than we take edges, connected by nodes to last added edge, from both parent paths.
+	 * We compare their cost and choose one which smaller one. 
+	 * If one of chosen edge is already in child path, we chose second one.
+	 * If both of them is in child path, we add random, still non-added one.
+	 * @param other second path
+	 * @return
+	 */
 	public Path crossover(Path other) {
 		if(graph_ != other.graph_){
 			return null;
 		}
 		Path newPath = new Path(graph_);
-		newPath.addNodeUnvisited(0);
+		newPath.addUnvisitedNode(rand_.nextInt(graph_.getSize()));
 		
 		for(int i = 0; i<getSize() - 1; ++i)
 		{
@@ -62,7 +75,9 @@ public class Path {
 		}
 		return newPath;
 	}
-	
+	/**
+	 * mutation - chooses random two cities and swaps them
+	 */
 	public void mutate(){
 		int first = rand_.nextInt(getSize());
 		int second = rand_.nextInt(getSize());
@@ -70,13 +85,20 @@ public class Path {
 		swap(first, second);
 	}
 
+	/**
+	 * Add node to path
+	 * @param node
+	 */
 	public void addNode(Integer node){
 		if(!hasNode(node)){
-			addNodeUnvisited(unvisitedIndexes_.get(node));
+			addUnvisitedNode(unvisitedIndexes_.get(node));
 		}
 	}
-	
-	public void addNodeUnvisited(int index){
+	/**
+	 * Add unvisited node to path by index in unvisited table
+	 * @param index
+	 */
+	public void addUnvisitedNode(int index){
 		if(unvisited_.size() == 0){
 			return;
 		}
@@ -92,6 +114,9 @@ public class Path {
 	    visit(index);
 	}
 	
+	/**
+	 * Create random path
+	 */
 	public void randomize(){
 		int[] values = new int[getSize()];
 		for(int i =0; i < getSize(); ++i)
@@ -104,6 +129,10 @@ public class Path {
 		}
 	}
 	
+	/**
+	 * Counts cost of path
+	 * @return
+	 */
 	public int countCost(){
 		if(unvisited_.size() != 0){
 			return NOT_COUNTED;
@@ -117,6 +146,11 @@ public class Path {
 		return cost_;
 	}
 	
+	/**
+	 * Visit edge, what means, removes from unvisited and unvisitedIdexes arrays. 
+	 * There is used fast remove which last element assign to removing one and remove last one to void costly array copying.
+	 * @param index
+	 */
 	private void visit(int index){
 		int lastElement = unvisited_.get(unvisited_.size() - 1);
 		unvisitedIndexes_.set(unvisited_.get(index), VISITED);
@@ -135,7 +169,7 @@ public class Path {
 	
 	private void addRandomUnvisitedNode(){
 		int index = rand_.nextInt(unvisited_.size());
-		addNodeUnvisited(index);
+		addUnvisitedNode(index);
 	}
 	
 	private void swap(int firstNode, int secondNode){

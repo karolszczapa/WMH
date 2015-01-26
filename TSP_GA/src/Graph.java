@@ -37,7 +37,10 @@ public class Graph {
 			}
 		}
 	}
-	
+	/**
+	 * Branch and bound class which find the small cost of possibly path
+	 *
+	 */
 	public class BranchAndBound
 	{
 		private Graph graph_;
@@ -201,7 +204,10 @@ public class Graph {
 		    }
 		}
 	}
-	
+	/**
+	 * Brutal force algorithm which finds the best path cost
+	 * @return
+	 */
 	public int findBestPathCost(){
 		ArrayList<Integer> path = new ArrayList<Integer>();
 		ArrayList<Integer> unvisited = new ArrayList<Integer>();
@@ -212,6 +218,10 @@ public class Graph {
 		return countBest(path, unvisited);
 	}
 	
+	/**
+	 * This one using brand and bound algorithm
+	 * @return
+	 */
 	public int findBestPathCost2(){
 		BranchAndBound b = new BranchAndBound(this);
 		return b.findBestCost();
@@ -236,6 +246,11 @@ public class Graph {
 		return cost;
 	}
 	
+	/**
+	 * Count cost of given path by array of integers
+	 * @param path
+	 * @return
+	 */
 	public int countCost(ArrayList<Integer> path){
 		int cost = getCost(path.get(path.size() - 1), path.get(0));
 		for(int i =0; i < path.size() - 1; ++i){
@@ -244,10 +259,20 @@ public class Graph {
 		return cost;
 	}
 	
+	/**
+	 * Get node's cost of edges i and i.
+	 * @param i
+	 * @param j
+	 * @return
+	 */
 	public int getCost(int i, int j){
 		return costs_[i][j];
 	}
 	
+	/**
+	 * return size of graph
+	 * @return
+	 */
 	public int getSize(){
 		return size_;
 	}

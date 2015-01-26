@@ -29,6 +29,12 @@ public class GeneticAlgorithm {
         output_ = output;
 	}
 	
+	/**
+	 * Starts genetic algorithm in give iteration count
+	 * @param iterationCount
+	 * @return
+	 * @throws IOException
+	 */
 	public Population invoke(int iterationCount) throws IOException {
 		randomize();
 		long start = System.currentTimeMillis();   

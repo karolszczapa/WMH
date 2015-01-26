@@ -8,6 +8,11 @@ public class Population extends ArrayList<Path> {
 	private Random random_;
 	private Graph graph_;
 	
+	/**
+	 * create population.
+	 * @param populationSize
+	 * @param graph
+	 */
 	public Population(int populationSize, Graph graph){
 		super(populationSize);
 		populationSize_ = populationSize;
@@ -15,14 +20,25 @@ public class Population extends ArrayList<Path> {
 		random_ = new Random();
 	}
 	
+	/**
+	 * returns population size
+	 * @return
+	 */
 	public int getPopulationSize(){
 		return populationSize_;
 	}
 	
+	/**
+	 * returns space in population
+	 * @return
+	 */
 	public int getRemainSize(){
 		return populationSize_ - size();
 	}
 	
+	/**
+	 * creates population randomly
+	 */
 	public void randomize(){
 		for (int i =0; i < populationSize_; ++i){
 			Path p = new Path(graph_);
@@ -31,11 +47,19 @@ public class Population extends ArrayList<Path> {
 		}
 	}
 	
+	/**
+	 * Chooses path randomly.
+	 * @return
+	 */
 	public Path randomSelect(){
 		int index = random_.nextInt(populationSize_);
 		return get(index);
 	}
 	
+	/**
+	 * Chooses path by tournament selection.
+	 * @return
+	 */
 	public Path tournamentSelect(){
 		Path p1 = randomSelect();
 		Path p2 = randomSelect();
@@ -46,6 +70,9 @@ public class Population extends ArrayList<Path> {
 		return cost1 < cost2 ? p1 : p2;
 	}
 	
+	/**
+	 * Sort of population by there cost
+	 */
 	public void sort(){
 		if(size() == 0){
 			return;
@@ -53,6 +80,10 @@ public class Population extends ArrayList<Path> {
 		Collections.sort(this, new PathCostComparator());
 	}
 	
+	/**
+	 * count average cost of population.
+	 * @return
+	 */
 	public double averageCost(){
 		double cost = 0;
 		for(int i = 0; i < size(); ++i){
