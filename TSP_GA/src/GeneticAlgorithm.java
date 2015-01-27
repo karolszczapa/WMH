@@ -41,7 +41,6 @@ public class GeneticAlgorithm {
 	}
 	
 	public void invokeN(int iterationCount, int startsCount) throws IOException {
-		graph_.randomize();
 		int bestCost = graph_.findBestPathCost2();
 		int actualBestCost = 99999;
 		output_.write(""+bestCost+"\n");
@@ -67,7 +66,6 @@ public class GeneticAlgorithm {
 		population_.clear();
 		population_.randomize();
 		long start = System.currentTimeMillis();   
-		int bestPathCost = 0;//graph_.findBestPathCost();
 		output_.flush();
 		long newStart = System.currentTimeMillis();
 		long elapsedTime = newStart - start;
