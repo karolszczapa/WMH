@@ -29,6 +29,23 @@ public class GeneticAlgorithm {
         output_ = output;
 	}
 	
+	public void invokeN(int iterationCount, int startsCount) throws IOException {
+		graph_.randomize();
+		int bestCost = graph_.findBestPathCost2();
+		int actualBestCost = 99999;
+		output_.write(""+bestCost+"\n");
+		for(int i =0; i < startsCount; ++i){
+			Population p =invoke(iterationCount);
+			if(p.get(0).countCost() < actualBestCost){
+				actualBestCost = p.get(0).countCost();
+			}
+			if (p.get(0).countCost() <= bestCost){
+				break;
+			}
+		}
+		output_.write(""+actualBestCost+"\n");
+		output_.flush();
+	}
 	/**
 	 * Starts genetic algorithm in give iteration count
 	 * @param iterationCount
@@ -36,17 +53,18 @@ public class GeneticAlgorithm {
 	 * @throws IOException
 	 */
 	public Population invoke(int iterationCount2) throws IOException {
-		randomize();
+		population_.clear();
+		population_.randomize();
 		long start = System.currentTimeMillis();   
 		int bestPathCost = 0;//graph_.findBestPathCost();
+		output_.flush();
 		long newStart = System.currentTimeMillis();
 		long elapsedTime = newStart - start;
 		start = newStart;
-        output_.write("PS:"+ population_.size()+"GS:"+graph_.getSize()+"MP:"+mutationPropability_+"EP:"+elitismPercentage_+"\n");
         output_.write("Iteration,Best Cost,Average Cost,Elapsed Time\n");
 		sort();
 		int actualCost;
-//		int oldCost = 99999;
+		int oldCost = 99999;
 		int iterationCount = iterationCount2;
 		for(int i = 0; i<iterationCount; ++i){
 			if(i%1000 == 0){
@@ -56,11 +74,11 @@ public class GeneticAlgorithm {
 				actualCost = population_.get(0).countCost();
                 output_.write("" + i + "," + actualCost + "," + population_.averageCost() + "," + elapsedTime+"\n");
                 output_.flush();
-//                if(actualCost < oldCost)
-//                {
-//                	oldCost = actualCost;
-//                	iterationCount += iterationCount2;
-//                }
+                if(actualCost < oldCost)
+                {
+                	oldCost = actualCost;
+                	iterationCount = i + iterationCount2;
+                }
 			}
 			Population newPop = createNewPopulation();
 			int remainSpace = newPop.getRemainSize();
@@ -122,9 +140,9 @@ public class GeneticAlgorithm {
 	
 	public static void main(String[] args) {
         try {
-            BufferedWriter output = fileOutput();
-            GeneticAlgorithm ga = new GeneticAlgorithm(1000, 40, 0.001, 0.10, output);
-            Population p = ga.invoke(10001);
+            BufferedWriter output = stdOutput();
+            GeneticAlgorithm ga = new GeneticAlgorithm(500, 14, 0.05, 0.01, output);
+            ga.invokeN(10001, 10);
             output.flush();
         } catch (IOException e) {
             e.printStackTrace();
