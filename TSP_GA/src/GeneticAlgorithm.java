@@ -42,6 +42,7 @@ public class GeneticAlgorithm {
 		long newStart = System.currentTimeMillis();
 		long elapsedTime = newStart - start;
 		start = newStart;
+        output_.write("PS:"+ population_.size()+"GS:"+graph_.getSize()+"MP:"+mutationPropability_+"EP:"+elitismPercentage_+"\n");
         output_.write("Iteration,Best Cost,Average Cost,Elapsed Time\n");
 		sort();
 		int actualCost;
@@ -122,7 +123,7 @@ public class GeneticAlgorithm {
 	public static void main(String[] args) {
         try {
             BufferedWriter output = fileOutput();
-            GeneticAlgorithm ga = new GeneticAlgorithm(1000, 40, 0.05, 0.10, output);
+            GeneticAlgorithm ga = new GeneticAlgorithm(1000, 40, 0.001, 0.10, output);
             Population p = ga.invoke(10001);
             output.flush();
         } catch (IOException e) {

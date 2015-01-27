@@ -88,10 +88,10 @@ public class Graph {
 					return;
 				}
 				removeNodeTo(possibleNodes, chosenNode);
-				if(minIsHigherThanMax(cost, possibleNodes)) return;
+				if(minIsHigherThanMax(cost, possibleNodes, path.size(),graph_.getSize())) return;
 				updateMax(cost, possibleNodes);
 			}
-			
+
 			path.add(chosenNode);
 			if(path.size() >= graph_.getSize()){
 				return;
