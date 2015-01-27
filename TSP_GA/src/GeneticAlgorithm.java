@@ -35,7 +35,7 @@ public class GeneticAlgorithm {
 	 * @return
 	 * @throws IOException
 	 */
-	public Population invoke(int iterationCount) throws IOException {
+	public Population invoke(int iterationCount2) throws IOException {
 		randomize();
 		long start = System.currentTimeMillis();   
 		int bestPathCost = 0;//graph_.findBestPathCost();
@@ -44,12 +44,22 @@ public class GeneticAlgorithm {
 		start = newStart;
         output_.write("Iteration,Best Cost,Average Cost,Elapsed Time\n");
 		sort();
+		int actualCost;
+//		int oldCost = 99999;
+		int iterationCount = iterationCount2;
 		for(int i = 0; i<iterationCount; ++i){
 			if(i%1000 == 0){
 				newStart = System.currentTimeMillis();
 				elapsedTime = newStart - start;
 				start = newStart;
-                output_.write("" + i + "," + population_.get(0).countCost() + "," + population_.averageCost() + "," + elapsedTime+"\n");
+				actualCost = population_.get(0).countCost();
+                output_.write("" + i + "," + actualCost + "," + population_.averageCost() + "," + elapsedTime+"\n");
+                output_.flush();
+//                if(actualCost < oldCost)
+//                {
+//                	oldCost = actualCost;
+//                	iterationCount += iterationCount2;
+//                }
 			}
 			Population newPop = createNewPopulation();
 			int remainSpace = newPop.getRemainSize();
