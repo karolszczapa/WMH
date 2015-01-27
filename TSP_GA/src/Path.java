@@ -178,6 +178,10 @@ public class Path {
 		
 		edges_.set(firstIndex, secondNode);
 		edges_.set(secondIndex, firstNode);
+		
+		int swapValue = edges_.get(firstNode);
+		edges_.set(firstNode, edges_.get(secondNode));
+		edges_.set(secondNode, swapValue);
 	}
 	
 	public int getSize(){
@@ -197,30 +201,5 @@ public class Path {
 	public String toString(){
 		ArrayList<Integer> nodes = getNodes();
 		return nodes.toString();
-	}
-	
-	public static void main(String[] args) {
-		Graph g = new Graph(4);
-		g.randomize();
-
-		Path p = new Path(g);
-		Path p2 = new Path(g);
-		Path p3 = new Path(g);
-		
-		p.randomize();
-		p2.randomize();
-		p3.randomize();
-		
-		Path c1 = p.crossover(p2);
-		Path c2 = p.crossover(p3);
-		Path c3 = p2.crossover(p3);
-		
-		Path d1 = c1.crossover(c2);
-		Path d2 = c1.crossover(c3);
-		Path d3 = c2.crossover(c3);
-		
-		System.out.println(d1.toString());
-		System.out.println(d2.toString());
-		System.out.println(d3.toString());
 	}
 }

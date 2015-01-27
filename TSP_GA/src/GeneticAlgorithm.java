@@ -74,7 +74,7 @@ public class GeneticAlgorithm {
 	
 	private boolean canMutate(){
 		double p = random_.nextDouble();
-		return p <= mutationPropability_ ? true : false;
+		return p <= mutationPropability_;
 	}
 	
 	private Path select(){

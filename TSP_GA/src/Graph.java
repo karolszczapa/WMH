@@ -150,16 +150,18 @@ public class Graph {
 			return newPossibleNodes;
 		}
 		
-		private boolean minIsHigherThanMax(int cost, ArrayList<ArrayList<Integer>> possibleNodes){
+		private boolean minIsHigherThanMax(int cost, ArrayList<ArrayList<Integer>> possibleNodes, int pathSize, int graphSize){
 			int min = cost;
+			int steps = pathSize;
 			for(int i = 0; i < possibleNodes.size(); ++i){
 				ArrayList<Integer> a = possibleNodes.get(i);
 				if(a.isEmpty()){
 					continue;
 				}
+				++steps;
 				min += graph_.getCost(i, a.get(0));
 			}
-			return min > max_;
+			return steps < graphSize || min > max_;
 		}
 		
 		private int countMax() {
