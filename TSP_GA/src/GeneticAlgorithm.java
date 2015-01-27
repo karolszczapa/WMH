@@ -19,8 +19,19 @@ public class GeneticAlgorithm {
 	private Population population_;
 	private Random random_;
 
+	public GeneticAlgorithm(int populationSize, double mutationPropability, double elitismPercentage, Graph graph, BufferedWriter output){
+		graph_ = graph;
+		population_ = new Population(populationSize, graph_);
+		random_ = new Random();
+		
+		mutationPropability_ = mutationPropability;
+		elitismPercentage_ = elitismPercentage;
+        output_ = output;
+	}
+	
 	public GeneticAlgorithm(int populationSize, int graphSize, double mutationPropability, double elitismPercentage, BufferedWriter output){
 		graph_ = new Graph(graphSize);
+		graph_.randomize();
 		population_ = new Population(populationSize, graph_);
 		random_ = new Random();
 		
@@ -141,7 +152,10 @@ public class GeneticAlgorithm {
 	public static void main(String[] args) {
         try {
             BufferedWriter output = stdOutput();
-            GeneticAlgorithm ga = new GeneticAlgorithm(500, 14, 0.05, 0.01, output);
+            Graph graph = new Graph(20);
+            graph.randomize();
+            graph.writeToOutput(output);
+            GeneticAlgorithm ga = new GeneticAlgorithm(500, 0.05, 0.01, graph, output);
             ga.invokeN(10001, 10);
             output.flush();
         } catch (IOException e) {

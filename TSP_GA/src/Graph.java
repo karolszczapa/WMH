@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
@@ -88,10 +91,10 @@ public class Graph {
 					return;
 				}
 				removeNodeTo(possibleNodes, chosenNode);
-				if(minIsHigherThanMax(cost, possibleNodes, path.size(),graph_.getSize())) return;
+				if(minIsHigherThanMax(cost, possibleNodes, path.size(), graph_.getSize())) return;
 				updateMax(cost, possibleNodes);
 			}
-
+			
 			path.add(chosenNode);
 			if(path.size() >= graph_.getSize()){
 				return;
@@ -277,5 +280,12 @@ public class Graph {
 	 */
 	public int getSize(){
 		return size_;
+	}
+	
+	public void writeToOutput(BufferedWriter output) throws IOException{
+		for(int i =0; i < costs_.length; ++i){
+			output.write(Arrays.toString(costs_[i]) + "\n");
+			output.flush();
+		}
 	}
 }
